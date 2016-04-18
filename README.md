@@ -1,6 +1,6 @@
 # UltraWemo, pure Java Wemo Controller
 
-In 2016, with the mouth of many overwhelmed with IoT words, there are still not many devices with the basic characteristics a IoT object should have:
+In 2016 there are still not many devices with the basic characteristics a IoT object should have:
 
 1. Easy to plug & play
 2. Providing a handy interface
@@ -10,6 +10,6 @@ The only devices that nowadays better respect the first two paradigms belong to 
 As for the point 3 they just provide mobile API.
 
 This project allows you to control your WeMo Devices with a pure Java library with no dependencies, creating a device wrapper by its ip.
-I had to implement this code since inside my chinese network Upnp discovery doesn't work.
+So that you can use inside a blocked router network where Upnp discovery doesn't work.
 
 See Wiki for further details.
