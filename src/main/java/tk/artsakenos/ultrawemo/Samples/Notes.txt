@@ -1,0 +1,8 @@
+
+=== Few Notes ===
+To develop this library I used Packet Capture
+    https://play.google.com/store/apps/details?id=app.greyshirts.sslcapture&hl=en 
+And information taken from:
+- https://github.com/brendonanderson/wemocontrol
+- https://ouimeaux.readthedocs.org
+
