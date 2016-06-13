@@ -1,7 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2016 by Andrea Addis
+ *
+ * Licensed under the Apache License, Version 2.0; you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License
+ * at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package tk.artsakenos.ultrawemo;
 
@@ -14,15 +24,18 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 /**
- * 
- * @author Andrea
+ *
+ * @author Andrea Addis
  */
-public class UW_Discovery {
+public abstract class UW_Discovery {
 
-    public static final void log(String text) {
-        System.out.println("LOG: " + text);
-    }
-
+    /**
+     * To complete and test. TODO: substitute the binding with localhost, and
+     * perform the search.
+     *
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     public void discovery() throws UnknownHostException, IOException {
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName("239.255.255.250"), 1900);
         MulticastSocket socket = new MulticastSocket(null);
@@ -67,5 +80,43 @@ public class UW_Discovery {
         recSocket.disconnect();
         recSocket.close();
     }
+
+    /**
+     * This method allow to discover devices with standard settings in network
+     * that don't support upnp. Example:
+     * UW_Discovery.discovery_raw("192.168.1.%s", 5, 20);
+     *
+     * @param ipRange The ip range using one Java String format specifier
+     * @param rangeMin the range from (e.g., 1)
+     * @param rangeMax the range to (e.g., 254)
+     */
+    public void discovery_raw(final String ipRange, final int rangeMin, final int rangeMax) {
+
+        // TODO: Some value checking.
+        final int port = 49153;
+
+        for (int d = rangeMin; d < rangeMax; d++) {
+            final int df = d;
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        UW_Device uw_dev;
+                        String ipTry = String.format(ipRange, df);
+                        // System.out.println("trying " + ipTry);
+                        uw_dev = new UW_Device(ipTry, port);
+                        String result = uw_dev.getService(UW_Device.S_FriendlyName);
+                        onDiscover(result, ipTry, port);
+                    } catch (IOException ex) {
+                        // System.err.println("IP (" + df + ") non va bene.");
+                    }
+                }
+            }.start();
+
+        }
+
+    }
+
+    public abstract void onDiscover(String deviceName, String deviceIp, int devicePort);
 
 }
